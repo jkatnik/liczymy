@@ -1,0 +1,78 @@
+:root{--fiolet:#7c4dff;--fiolet-ciemny:#5a2fd6;--zolty:#ffc93c;--zielony:#1e9e55;--czerwony:#e53935;--niebieski:#0288d1;--pomarancz:#ef6c00;
+  --tekst:#33264d;--tekst-2:#6b5a8a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{font-family:"Baloo 2","Comic Sans MS","Trebuchet MS",system-ui,sans-serif;color:var(--tekst);
+  background:linear-gradient(170deg,#5fb8f5 0%,#7fd8c4 55%,#ffe08a 100%) fixed #7fd8c4;
+  min-height:100dvh;display:flex;flex-direction:column;
+  padding:max(12px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));
+  user-select:none;overflow-x:hidden;touch-action:manipulation}
+#root{flex:1;display:flex}
+.app{flex:1;width:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.top{position:relative;z-index:1;display:flex;justify-content:space-between;gap:8px}
+.pill{background:#fff;border-radius:999px;padding:6px 14px;font-size:1.25rem;font-weight:800;box-shadow:0 4px 0 rgba(0,0,0,.12)}
+.card{position:relative;z-index:1;background:#fff;border-radius:28px;padding:20px;box-shadow:0 6px 0 rgba(0,0,0,.12);text-align:center}
+h1{margin:0;font-size:2rem;line-height:1.1;color:var(--fiolet);text-wrap:balance}
+.opis{font-size:1.3rem;margin:.4em 0 1em;text-wrap:balance}
+.tytul{font-size:1.2rem}
+small{font-size:1rem;color:var(--tekst-2)}
+.maskotka{font-size:5rem;line-height:1;animation:skacz 1.6s ease-in-out infinite}
+@keyframes skacz{50%{transform:translateY(-10px) rotate(-5deg)}}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:4px solid var(--fiolet-ciemny);outline-offset:3px}
+.big-btn{position:relative;z-index:1;display:block;width:100%;border:0;border-radius:24px;padding:16px;font-size:1.8rem;font-weight:800;color:#fff;
+  background:var(--zielony);box-shadow:0 6px 0 #157a40;transition:transform .08s,box-shadow .08s}
+.big-btn:active{transform:translateY(4px);box-shadow:0 2px 0 #157a40}
+.big-btn.alt{background:var(--niebieski);box-shadow:0 6px 0 #01579b;font-size:1.4rem}
+
+/* Tydzień */
+.tydzien{display:flex;justify-content:space-between;gap:4px}
+.dzien{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.9rem;font-weight:800;color:var(--tekst-2)}
+.dzien b{width:min(40px,11vw);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:#f0ebf7;font-size:1.25rem}
+.dzien.ok b{background:var(--fiolet);box-shadow:0 3px 0 var(--fiolet-ciemny)}
+.dzien.dzis{color:var(--pomarancz)}
+.dzien.dzis:not(.ok) b{background:#fff;border:3px dashed var(--pomarancz);color:var(--pomarancz)}
+
+/* Zoo */
+.zoo{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:6px;margin:10px 0 6px}
+.zoo span{aspect-ratio:1;display:grid;place-items:center;font-size:1.9rem;border-radius:14px}
+.zoo .mam{background:#fff4d6}
+.zoo .zablokowane{filter:brightness(0);opacity:.12}
+.zoo .nastepny{opacity:.28;outline:3px dashed var(--fiolet);outline-offset:-3px;filter:brightness(0);animation:pulsuj 1.4s ease-in-out infinite}
+@keyframes pulsuj{50%{transform:scale(1.12)}}
+
+/* Gra */
+.postep{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.postep i{width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.55);border:3px solid #fff;transition:transform .2s}
+.postep i.ok{background:var(--zielony)}
+.postep i.zle{background:var(--czerwony)}
+.postep i.teraz{background:var(--zolty);transform:scale(1.25)}
+.dzialanie{display:flex;justify-content:center;align-items:center;gap:.15em;font-size:clamp(3.4rem,18vw,5.5rem);font-weight:800;line-height:1;padding:22px 0 18px}
+.luka{min-width:1.3em;height:1.35em;border:5px dashed var(--fiolet);border-radius:18px;display:grid;place-items:center;color:var(--fiolet);background:#f3eeff}
+.luka.ok{border-style:solid;border-color:var(--zielony);color:#fff;background:var(--zielony)}
+.luka.zle{border-style:solid;border-color:var(--czerwony);color:#fff;background:var(--czerwony)}
+.luka.popraw{border-style:solid;border-color:var(--pomarancz);color:#fff;background:var(--pomarancz)}
+.trzes{animation:trzes .4s}
+@keyframes trzes{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+.komunikat{min-height:2.2rem;font-size:clamp(1.25rem,6vw,1.6rem);font-weight:800;text-wrap:balance}
+/* klawiatura przyklejona do dołu ekranu — w zasięgu kciuka i nie skacze, gdy karta zmienia wysokość */
+.klawiatura{margin-top:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;transition:opacity .2s}
+.klawiatura button{border:0;border-radius:20px;font-weight:800;font-size:clamp(2.2rem,10vw,2.8rem);min-height:clamp(64px,11dvh,96px);color:#fff;
+  box-shadow:0 5px 0 rgba(0,0,0,.25);text-shadow:0 2px 0 rgba(0,0,0,.18);transition:transform .08s,box-shadow .08s}
+.klawiatura button:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.klawiatura .dziesiec{grid-column:span 2}
+.klawiatura.czeka{opacity:.45;pointer-events:none}
+
+/* Koniec */
+.nagroda{font-size:clamp(3.5rem,18vw,5rem);font-weight:800;line-height:1.1;color:var(--fiolet);margin-top:8px;animation:pop .6s .2s both}
+.nowy{display:flex;flex-direction:column;align-items:center;gap:2px;margin:18px auto 0;padding:14px;border-radius:22px;background:#fff4d6;font-size:1.3rem}
+.nowy-zwierzak{font-size:4.5rem;line-height:1.1;animation:pop .7s .6s both}
+.konfetti{position:fixed;top:-60px;font-size:2rem;pointer-events:none;animation:spadaj linear forwards;z-index:0}
+@keyframes spadaj{to{transform:translateY(110vh) rotate(720deg)}}
+.pop{animation:pop .5s}
+@keyframes pop{0%{transform:scale(.6)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important}
+  .konfetti{display:none}
+}
