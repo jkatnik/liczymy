@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { los, noweZadanie, nowaRunda, odpowiedz as dobraOdpowiedz } from './zadania.js'
+import { useMemo, useRef, useState } from 'react'
+import { los, noweZadanie, nowaRunda, poOdpowiedzi, odpowiedz as dobraOdpowiedz } from './zadania.js'
 
 const KLUCZ = 'liczymy-do-10'
 const ZWIERZAKI = [...'🐶🐱🐭🐹🐰🦊🐻🐼🐨🐯🦁🐮🐷🐸🐵🐔🐧🐦🦄🐝🦋🐢🐙🦕🐳🦒🦓🐘🦔🐉']
@@ -45,18 +45,30 @@ export default function App() {
   const [stan, setStan] = useState(wczytaj)
   const [ekran, setEkran] = useState('start')
   const [wynik, setWynik] = useState(null)
+  // Gra woła nas z setTimeout, więc domknięcie `stan` bywa nieaktualne — zawsze bierzemy najświeższy z refa
+  const stanRef = useRef(stan)
+  function aktualizuj(nowy) {
+    stanRef.current = nowy
+    zapisz(nowy)
+    setStan(nowy)
+  }
+
+  function poOdpowiedziNaZadanie(z, dobrze) {
+    const s = stanRef.current
+    aktualizuj({ ...s, doPowtorki: poOdpowiedzi(s.doPowtorki ?? [], z, dobrze) })
+  }
 
   function koniecRundy(wyniki, liczbaZadan) {
+    const s = stanRef.current
     const bledy = wyniki.filter(w => !w).length
     const bonus = bledy === 0 ? 3 : 0
     const zdobyte = wyniki.length - bledy + bonus
-    const nowy = { gwiazdki: stan.gwiazdki + zdobyte, dni: { ...stan.dni } }
-    if (!stan.dni[dzis()]) nowy.dni[dzis()] = { bledy, zadan: liczbaZadan }
+    const nowy = { ...s, gwiazdki: s.gwiazdki + zdobyte, dni: { ...s.dni } }
+    if (!s.dni[dzis()]) nowy.dni[dzis()] = { bledy, zadan: liczbaZadan }
     const zwierzaki = Math.floor(nowy.gwiazdki / GWIAZDEK_NA_ZWIERZAKA)
-    const nowyZwierzak = zwierzaki > Math.floor(stan.gwiazdki / GWIAZDEK_NA_ZWIERZAKA)
+    const nowyZwierzak = zwierzaki > Math.floor(s.gwiazdki / GWIAZDEK_NA_ZWIERZAKA)
       ? ZWIERZAKI[Math.min(zwierzaki, ZWIERZAKI.length) - 1] : null
-    zapisz(nowy)
-    setStan(nowy)
+    aktualizuj(nowy)
     setWynik({ bledy, bonus, zdobyte, nowyZwierzak })
     setEkran('koniec')
     dzwiekKoniec()
@@ -70,7 +82,7 @@ export default function App() {
         <span className="pill">🔥 {s} {s === 1 ? 'dzień' : 'dni'}</span>
       </div>
       {ekran === 'start' && <Start stan={stan} onStart={() => setEkran('gra')} />}
-      {ekran === 'gra' && <Gra onKoniec={koniecRundy} />}
+      {ekran === 'gra' && <Gra doPowtorki={stan.doPowtorki ?? []} onOdpowiedz={poOdpowiedziNaZadanie} onKoniec={koniecRundy} />}
       {ekran === 'koniec' && <Koniec wynik={wynik} onDalej={() => setEkran('start')} />}
     </div>
   )
@@ -118,8 +130,8 @@ function Start({ stan, onStart }) {
   </>
 }
 
-function Gra({ onKoniec }) {
-  const [zadania, setZadania] = useState(nowaRunda)
+function Gra({ doPowtorki, onOdpowiedz, onKoniec }) {
+  const [zadania, setZadania] = useState(() => nowaRunda(doPowtorki))
   const [i, setI] = useState(0)
   const [wyniki, setWyniki] = useState([])
   const [odp, setOdp] = useState(null) // { n, stan: 'ok' | 'zle' | 'popraw' } — gdy ustawione, klawiatura zablokowana
@@ -139,6 +151,7 @@ function Gra({ onKoniec }) {
   function odpowiedz(n) {
     if (odp) return
     const dobra = dobraOdpowiedz(z)
+    onOdpowiedz(z, n === dobra)
     if (n === dobra) {
       const wyn = [...wyniki, true]
       setWyniki(wyn)
