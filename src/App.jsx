@@ -89,11 +89,15 @@ export default function App() {
 }
 
 const ANDROID = /Android/i.test(navigator.userAgent)
+// iPadOS udaje Maca, więc rozpoznajemy go po ekranie dotykowym
+const IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1)
 const PRZYPOMNIENIE = 'Poćwicz z dzieckiem liczenie'
 
 // Android: budzik przez intent SET_ALARM (bez powtarzania — EXTRA_DAYS nie da się przekazać w linku).
 // Gdy Chrome nie otworzy Zegara, przechodzi na browser_fallback_url, czyli codzienne wydarzenie w Kalendarzu Google.
+// iOS: statyczny public/przypomnienie.ics (codziennie 18:00 czasu lokalnego, z alarmem) — Safari pokazuje „Dodaj do Kalendarza”.
 function linkPrzypomnienia() {
+  if (IOS) return import.meta.env.BASE_URL + 'przypomnienie.ics'
   const d = dzis().replaceAll('-', '')
   const kalendarz = 'https://calendar.google.com/calendar/render?' + new URLSearchParams({
     action: 'TEMPLATE', text: PRZYPOMNIENIE + ' 🦊', details: location.href,

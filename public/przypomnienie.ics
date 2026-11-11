@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//liczymy//PL
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:liczymy-przypomnienie@jkatnik.github.io
+DTSTAMP:20261111T120000Z
+DTSTART:20261111T180000
+DTEND:20261111T181500
+RRULE:FREQ=DAILY
+SUMMARY:Poćwicz z dzieckiem liczenie 🦊
+DESCRIPTION:https://jkatnik.github.io/liczymy/
+URL:https://jkatnik.github.io/liczymy/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Poćwicz z dzieckiem liczenie
+TRIGGER:PT0M
+END:VALARM
+END:VEVENT
+END:VCALENDAR
