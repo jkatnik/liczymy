@@ -88,6 +88,24 @@ export default function App() {
   )
 }
 
+const ANDROID = /Android/i.test(navigator.userAgent)
+const PRZYPOMNIENIE = 'Poćwicz z dzieckiem liczenie'
+
+// Android: budzik przez intent SET_ALARM (bez powtarzania — EXTRA_DAYS nie da się przekazać w linku).
+// Gdy Chrome nie otworzy Zegara, przechodzi na browser_fallback_url, czyli codzienne wydarzenie w Kalendarzu Google.
+function linkPrzypomnienia() {
+  const d = dzis().replaceAll('-', '')
+  const kalendarz = 'https://calendar.google.com/calendar/render?' + new URLSearchParams({
+    action: 'TEMPLATE', text: PRZYPOMNIENIE + ' 🦊', details: location.href,
+    dates: `${d}T180000/${d}T181500`, ctz: Intl.DateTimeFormat().resolvedOptions().timeZone, recur: 'RRULE:FREQ=DAILY',
+  })
+  if (!ANDROID) return kalendarz
+  return 'intent:#Intent;action=android.intent.action.SET_ALARM;'
+    + 'i.android.intent.extra.alarm.HOUR=18;i.android.intent.extra.alarm.MINUTES=0;'
+    + `S.android.intent.extra.alarm.MESSAGE=${encodeURIComponent(PRZYPOMNIENIE)};`
+    + `S.browser_fallback_url=${encodeURIComponent(kalendarz)};end`
+}
+
 function Start({ stan, onStart }) {
   const t = dzis()
   const zrobione = !!stan.dni[t]
@@ -126,6 +144,13 @@ function Start({ stan, onStart }) {
           <span key={k} className={k < odblokowane ? 'mam' : k === odblokowane ? 'zablokowane nastepny' : 'zablokowane'}>{z}</span>)}
       </div>
       <small>Jeszcze {doNastepnego} ⭐ do nowego zwierzaka</small>
+    </div>
+    <div className="card">
+      <b className="tytul">Przypomnienie dla rodzica ⏰</b>
+      <a className="big-btn alt przypomnienie" href={linkPrzypomnienia()}>
+        {ANDROID ? 'Ustaw budzik na 18:00' : 'Dodaj do kalendarza (18:00)'}
+      </a>
+      {ANDROID && <small>Zaznacz w budziku powtarzanie codziennie</small>}
     </div>
   </>
 }
