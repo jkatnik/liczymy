@@ -130,7 +130,7 @@ function Start({ stan, onStart }) {
 
   return <>
     <div className="card">
-      <div className="maskotka">{zrobione ? '😺' : '🦊'}</div>
+      <div className="maskotka">{odblokowane ? ZWIERZAKI[Math.min(odblokowane, ZWIERZAKI.length) - 1] : '🦊'}</div>
       <h1>{zrobione ? 'Dzisiaj zrobione!' : 'Liczymy do 10!'}</h1>
       <p className="opis">
         {zrobione ? 'Brawo! Możesz poćwiczyć jeszcze trochę 💪'
