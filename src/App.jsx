@@ -171,7 +171,6 @@ function Gra({ onKoniec }) {
         <i key={k} className={k < i ? (wyniki[k] ? 'ok' : 'zle') : k === i ? (wyniki[k] === undefined ? 'teraz' : wyniki[k] ? 'ok' : 'zle') : ''} />)}
     </div>
     <div className="card">
-      <small>Zadanie {i + 1} z {zadania.length}</small>
       <div className={`dzialanie ${odp?.stan === 'zle' ? 'trzes' : ''}`}>
         {pole(a, 0)}<span>{op === '-' ? '−' : '+'}</span>{pole(b, 2)}<span>=</span>{pole(c, 3)}
       </div>
