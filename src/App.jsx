@@ -146,11 +146,8 @@ function Start({ stan, onStart }) {
       <small>Jeszcze {doNastepnego} ⭐ do nowego zwierzaka</small>
     </div>
     <div className="card">
-      <b className="tytul">Przypomnienie dla rodzica ⏰</b>
-      <a className="big-btn alt przypomnienie" href={linkPrzypomnienia()}>
-        {ANDROID ? 'Ustaw budzik na 18:00' : 'Dodaj do kalendarza (18:00)'}
-      </a>
-      {ANDROID && <small>Zaznacz w budziku powtarzanie codziennie</small>}
+      <a className="big-btn alt przypomnienie" href={linkPrzypomnienia()}>Dodaj przypomnienie ⏰</a>
+      {ANDROID && <small className="podpowiedz">Zaznacz w budziku powtarzanie codziennie</small>}
     </div>
   </>
 }
